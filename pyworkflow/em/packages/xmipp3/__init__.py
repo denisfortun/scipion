@@ -58,6 +58,7 @@ from viewer_validate_nontilt import XmippValidateNonTiltViewer
 from plotter import XmippPlotter
 
 from protocol_align_volume import XmippProtAlignVolume, XmippProtAlignVolumeForWeb
+from protocol_angular_distance import XmippProtCTFDefocusGroup
 from protocol_apply_alignment import XmippProtApplyAlignment
 from protocol_break_symmetry import XmippProtAngBreakSymmetry
 from protocol_cl2d_align import XmippProtCL2DAlign
