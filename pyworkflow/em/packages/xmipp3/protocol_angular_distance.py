@@ -27,7 +27,7 @@
 This sub-package contains wrapper around angular_break_symmetry Xmipp program
 """
 
-from pyworkflow.object import String
+#from pyworkflow.object import String
 from pyworkflow.em.protocol import ProtProcessParticles
 from convert import writeSetOfParticles, readSetOfParticles
 from pyworkflow.protocol.params import (PointerParam, StringParam, LEVEL_ADVANCED)
@@ -36,13 +36,14 @@ from pyworkflow.protocol.params import (PointerParam, StringParam, LEVEL_ADVANCE
 
         
         
-class XmippProtAndGist(ProtProcessParticles):
-    """ Classify particles according their similarity to the others in order to detect outliers. """
+class XmippProtAngDist(ProtProcessParticles):
+    """ angular distance between two sets of particles """
     _label = 'angular distance'
 
     #--------------------------- DEFINE param functions --------------------------------------------
-    def _defineProcessParams(self, form):
+    def _defineParams(self, form):
 
+        form.addSection(label='Input')
         form.addParam('inputParticles', PointerParam,
                       pointerClass='SetOfParticles',
                       label="Angles information 1",pointerCondition='hasAlignment',
@@ -69,12 +70,14 @@ class XmippProtAndGist(ProtProcessParticles):
     def _getDefaultParallel(self):
         """This protocol doesn't have mpi version"""
         return (0, 0)
-     
-    #--------------------------- INSERT steps functions --------------------------------------------            
+
+    #--------------------------- INSERT steps functions --------------------------------------------
     def _insertAllSteps(self):
         """ Mainly prepare the command line for call brak symmetry program"""
         # Create a metadata with the geometrical information
         # as expected by Xmipp
+        #--------------------------- STEPS functions --------------------------------------------
+        self.outImagesMd = self._getPath('out')
         imgsFn1 = self._getPath('input_particles1.xmd')
         imgsFn2 = self._getPath('input_particles2.xmd')
         self._insertFunctionStep('convertInputStep', imgsFn1, imgsFn2)
@@ -88,13 +91,11 @@ class XmippProtAndGist(ProtProcessParticles):
         writeSetOfParticles(self.inputParticles.get(), outputFn1)
         writeSetOfParticles(self.inputParticles2.get(), outputFn2)
 
-    #--------------------------- STEPS functions --------------------------------------------
     def computeAngDistStep(self, imgsFn1, imgsFn2):
-        outImagesMd = self._getPath('out.xmd')
-        args = "--ang1 Particles@%s --ang2 Particles@%s  --sym %s --oroot %s" %\
-               (imgsFn1, imgsFn2, self.symmetryGroup.get(), outImagesMd )
+        args = "--ang1 Particles@%s --ang2 Particles@%s  --sym %s --oroot %s" % \
+               (imgsFn1, imgsFn2, self.symmetryGroup.get(), self.outImagesMd )
         self.runJob("xmipp_angular_distance ", args)
-        self.outputMd = String(outImagesMd)
+        #self.outputMd = String(outImagesMd+'.xmd')
 
     #def createOutputStep(self):
     #    imgSet = self._createSetOfParticles()
@@ -112,13 +113,13 @@ class XmippProtAndGist(ProtProcessParticles):
         else:
             summary.append("Symmetry: %s"% self.symmetryGroup.get())
         return summary
-    
+
     def _validate(self):
         pass
-        
+
     def _citations(self):
         return []
-    
+
     def _methods(self):
         methods = []
         return methods

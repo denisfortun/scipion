@@ -44,6 +44,7 @@ from protocol_preprocess import *
 
 from viewer import XmippViewer
 
+from viewer_angular_distance import XmippProtAngDistViewer
 from viewer_cl2d import XmippCL2DViewer
 from viewer_cltomo import XmippCLTomoViewer
 from viewer_ctf_discrepancy import XmippCTFDiscrepancyViewer
@@ -58,7 +59,7 @@ from viewer_validate_nontilt import XmippValidateNonTiltViewer
 from plotter import XmippPlotter
 
 from protocol_align_volume import XmippProtAlignVolume, XmippProtAlignVolumeForWeb
-from protocol_angular_distance import XmippProtCTFDefocusGroup
+from protocol_angular_distance import XmippProtAngDist
 from protocol_apply_alignment import XmippProtApplyAlignment
 from protocol_break_symmetry import XmippProtAngBreakSymmetry
 from protocol_cl2d_align import XmippProtCL2DAlign
