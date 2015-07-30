@@ -112,6 +112,9 @@ mainUrls = ['',
     url(r'^download_form/', 'app.views_home.download_form'),
     url(r'^doDownload/', 'app.views_home.doDownload'),
 
+#emxconvert
+    url(r'^emxconvert/', include('emxconvert.urls')), # ADD THIS NEW TUPLE!
+
 ]
 
 # Load URLS for webtools
