@@ -22,7 +22,7 @@ mainUrls = ['',
     
     # If no path given, load the projects view
 #     url(r'^$', 'app.views_project.projects'),
-    url(r'^$', 'app.views_project.webservice_projects'),
+    url(r'^$', 'emxconvert.views.index'),
     url(r'^services/', 'app.views_project.webservice_projects'),
     
     #PROJECT (CONTENT, RUNTABLE AND GRAPH)
