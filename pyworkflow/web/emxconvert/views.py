@@ -17,35 +17,36 @@ def list(request):
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
-            file_new = request.FILES['docfile']
-            print("file_new", type(file_new), file_new.name)
-            newdoc = Document(docfile = file_new)
-            request.session['newdoc']=newdoc
-            request.session['file_new']=file_new
+            baseFileName = request.FILES['docfile']
+            newdoc = Document(docfile = baseFileName)
+            request.session['docfile_url']=newdoc.docfile.url
+            request.session['baseFileName']=baseFileName.name
+            #return HttpResponse("hi there")
             #            emxFileName = (os.path.splitext(file_new.name)[0]+'.emx')
             newdoc.save()#saves doc
 
             # Redirect to the document list after POST
             #            return HttpResponseRedirect(reverse('myapp.views.list'))
+
             return HttpResponseRedirect(reverse('emxconvert.views.list'))
     else:
         form = DocumentForm() # A empty, unbound form
 
     # Load documents for the list page
-    if 'newdoc' in request.session:
-        document = request.session['newdoc']
-        file_new = request.session['file_new']
+    if 'docfile_url' in request.session:
+        docfile_url = request.session['docfile_url']
+        baseFileName = request.session['baseFileName']
     else:
-        document = None
-        file_new = None
+        docfile_url = None
+        baseFileName = None
     #print("document",document.docfile.name)
     # Render list page with the documents and the form,
 
     return render_to_response(
         'emxconvert/list.html',
-        {'document': document,
+        {'docfile_url': docfile_url,
          'form': form,
-         'file_new': file_new,
+         'baseFileName': baseFileName,
          'general_css': getResourceCss('general'),
          },
         context_instance=RequestContext(request)
