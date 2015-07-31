@@ -169,6 +169,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     # 'gunicorn',
     'app',
+    'emxconvert'
 )   
 
 try:
