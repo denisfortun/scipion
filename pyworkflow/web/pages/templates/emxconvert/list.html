@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <title>ENX converted (coordenates only)</title>
+    <meta charset='utf-8'>
+    <link rel="icon" type="image/png" href="{{favicon}}"/>
+
+    <!-- CSS -->
+    <link href="{{general_css}}" rel="stylesheet" type="text/css">
+
+    <style type="text/css">
+        div#bodyStyle {
+            margin-left: auto;
+            margin-right: auto;
+            width: 70%;
+            padding: 1em;
+            border-radius: 7px;
+        }
+
+        header {
+            height: 6em;
+        }
+
+        div#box {
+            padding: 0.5em 2.2em 0.5em 2.2em;
+            margin-left: auto;
+            margin-right: auto;
+            height: auto;
+            width: 80%;
+            background-color: #E8E8E8;
+            border-radius: 5px;
+            text-align: center;
+            margin-top: 0em;
+            margin-bottom: 1em;
+        }
+
+        div#minibox {
+            width: 90%;
+            padding: 1em;
+            background-color: white;
+            border: 1px solid black;
+            border-radius: 5px;
+            display: inline-table;
+            margin: 1em;
+            text-align: left;
+        }
+
+        h1 {
+            font-size: 44px;
+        }
+
+        h1, h2, h3 {
+            padding: 5px;
+            font-weight: 500;
+            line-height: 1.1;
+        }
+
+        img.ico {
+            background-color: white;
+        }
+
+        div#steps {
+            text-align: left;
+            /* 	float:left;  */
+            width: 100%;
+        }
+
+        #buttons {
+            float: right;
+            /* 	width:auto; */
+        }
+
+        #textbtn {
+            /* 	float:left; */
+            width: 60%;
+        }
+
+        #lineOpt {
+            width: 100%;
+            display: flex;
+            /* 	text-align: left; */
+        }
+
+        .btn {
+            width: 10em;
+            margin-top: 0.8em;
+        }
+
+        table#download {
+            margin-left: 5em;
+        }
+
+        td#label {
+            text-align: right;
+        }
+
+        td#value {
+            text-align: right;
+        }
+
+        td#value input, select {
+            width: 22em;
+        }
+
+        a {
+            color: #0000FF;
+        }
+    </style>
+
+</head>
+
+<body>
+<header data-layout='{"type": "border", "hgap": 1, "vgap": 1}'
+        class="north">
+    <div id="headerMainContainer">
+        <a href="http://i2pc.cnb.csic.es/emx" id="headerLogoContainer">
+            <img class="logo" src="/resources/emxLogo.png"  alt="EMX logo">
+            <font size="6">Electron Microscopy Exchange (EMX)</font>
+        </a>
+        <div style="float: right;">
+            <a href="http://i2pc.cnb.csic.es/LoadHome.htm"> <img
+                    src="/resources/logo_i2pc_with_title.png" style="height: 3.2em;"/>
+            </a> <a href="http://www.structuralbiology.eu/"> <img
+                src="/resources/logoInstruct.png" style="height: 3.2em;"/>
+        </a> <a href="http://www.cnb.csic.es/"> <img
+                src="/resources/logo_cnb_without_title.gif" style="height: 3.2em;"/>
+        </a>
+        </div>
+    </div>
+    <div id="headerLine"></div>
+</header>
+<div id="box">
+    <h1>Convert Relion coordinates to EMX</h1><br />
+    {% if document != None%}Link to results:
+    <a href="{{ document.docfile.url }}">{{ file_new.name }}</a>
+    {% else %}
+    <p>Link to results here:</p>
+    {% endif %}
+
+    <!-- Upload form. Note enctype attribute! -->
+    <form action="{% url 'list' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div id="minibox">
+            <p>{{ form.non_field_errors }}</p>
+
+            <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
+
+            <p>
+                {{ form.docfile.errors }}
+                {{ form.docfile }}
+            </p>
+
+            <p><input type="submit" value="Upload"/></p>
+        </div>
+    </form>
+</div>
+</body>
+</html>
