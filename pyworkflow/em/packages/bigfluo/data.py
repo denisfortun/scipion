@@ -1,8 +1,9 @@
+# coding: latin-1
 # **************************************************************************
 # *
 # * Authors:     Denis Fortun (denis.fortun@epfl.ch)
 # *
-# * Biomedical Imaging Group EPFL
+# * Unidad de  Bioinformatica of Centro Nacional de Biotecnologia , CSIC
 # *
 # * This program is free software; you can redistribute it and/or modify
 # * it under the terms of the GNU General Public License as published by
@@ -23,27 +24,18 @@
 # *  e-mail address 'coss@cnb.csic.es'
 # *
 # **************************************************************************
-"""
-This sub-package contains data and protocol classes
-wrapping EPFL Fluorescence routines
-"""
-from bibtex import _bibtex # Load bibtex dict with references
 
-_logo = "simple_logo.png"
+import pyworkflow.em as em
 
-from epfl import *
 
-from data import Fluo3D, SetOfFluo3D
+class Fluo3D(em.Volume):
+    """  """
+    pass
 
-_environ = getEnviron()
 
-# from viewer import *
-from protocol_import_fluo3D import ProtImportFluo3D
-from protocol_fluorescence_convolutionMatching import ProtConvMatching
-from protocol_ransac_fluo import ProtRansacFluo
-from protocol_convmatch2D import ProtConvMatch2D, ConvMatch2DViewer
-from protocol_particle_picking_manual_3D import ProtParticlePickingManual3D
-from protocol_extract_particles_3D import ProtExtractParticles3D
-from pyworkflow.em.packages.xmipp3.protocol_cltomo import XmippProtCLTomo
-from protocol_align_3D import ProtAlign3D
-from protocol_create_mask3d_fluo import XmippProtCreateMask3DFluo
+class SetOfFluo3D(em.SetOfVolumes):
+    """ """
+    ITEM_TYPE = Fluo3D
+    
+    def __init__(self, **kwargs):
+        em.SetOfVolumes.__init__(self, **kwargs)

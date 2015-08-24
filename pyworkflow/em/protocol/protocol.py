@@ -50,7 +50,7 @@ class EMProtocol(Protocol):
     def __init__(self, **args):
         Protocol.__init__(self, **args)
         
-    def __createSet(self, SetClass, template, suffix):
+    def _createSet(self, SetClass, template, suffix):
         """ Create a set and set the filename using the suffix. 
         If the file exists, it will be delete. """
         setFn = self._getPath(template % suffix)
@@ -63,10 +63,10 @@ class EMProtocol(Protocol):
         return setObj
     
     def _createSetOfMicrographs(self, suffix=''):
-        return self.__createSet(SetOfMicrographs, 'micrographs%s.sqlite', suffix)
+        return self._createSet(SetOfMicrographs, 'micrographs%s.sqlite', suffix)
     
     def _createSetOfCoordinates(self, micSet, suffix=''):
-        coordSet = self.__createSet(SetOfCoordinates, 'coordinates%s.sqlite', suffix)
+        coordSet = self._createSet(SetOfCoordinates, 'coordinates%s.sqlite', suffix)
         coordSet.setMicrographs(micSet)       
         return coordSet
     
@@ -76,42 +76,42 @@ class EMProtocol(Protocol):
         return _createSetFunc(suffix)
         
     def _createSetOfParticles(self, suffix=''):
-        return self.__createSet(SetOfParticles, 'particles%s.sqlite', suffix)
+        return self._createSet(SetOfParticles, 'particles%s.sqlite', suffix)
 
     def _createSetOfAverages(self, suffix=''):
-        return self.__createSet(SetOfAverages, 'averages%s.sqlite', suffix)
+        return self._createSet(SetOfAverages, 'averages%s.sqlite', suffix)
         
     def _createSetOfMovieParticles(self, suffix=''):
-        return self.__createSet(SetOfMovieParticles, 'movie_particles%s.sqlite', suffix)
+        return self._createSet(SetOfMovieParticles, 'movie_particles%s.sqlite', suffix)
     
     def _createSetOfClasses2D(self, imgSet, suffix=''):
-        classes = self.__createSet(SetOfClasses2D, 'classes2D%s.sqlite', suffix)
+        classes = self._createSet(SetOfClasses2D, 'classes2D%s.sqlite', suffix)
         classes.setImages(imgSet)
         return classes
     
     def _createSetOfClasses3D(self, imgSet, suffix=''):
-        classes =  self.__createSet(SetOfClasses3D, 'classes3D%s.sqlite', suffix)
+        classes =  self._createSet(SetOfClasses3D, 'classes3D%s.sqlite', suffix)
         classes.setImages(imgSet)
         return classes
     
     def _createSetOfClassesVol(self, suffix=''):
-        return self.__createSet(SetOfClassesVol, 'classesVol%s.sqlite', suffix)
+        return self._createSet(SetOfClassesVol, 'classesVol%s.sqlite', suffix)
     
     def _createSetOfVolumes(self, suffix=''):
-        return self.__createSet(SetOfVolumes, 'volumes%s.sqlite', suffix)
+        return self._createSet(SetOfVolumes, 'volumes%s.sqlite', suffix)
     
     def _createSetOfCTF(self, suffix=''):
-        return self.__createSet(SetOfCTF, 'ctfs%s.sqlite', suffix)
+        return self._createSet(SetOfCTF, 'ctfs%s.sqlite', suffix)
 
 
     def _createSetOfNormalModes(self, suffix=''):
-        return self.__createSet(SetOfNormalModes, 'modes%s.sqlite', suffix)
+        return self._createSet(SetOfNormalModes, 'modes%s.sqlite', suffix)
     
     def _createSetOfMovies(self, suffix=''):
-        return self.__createSet(SetOfMovies, 'movies%s.sqlite', suffix)
+        return self._createSet(SetOfMovies, 'movies%s.sqlite', suffix)
 
     def _createSetOfAngles(self, suffix=''):
-        return self.__createSet(SetOfAngles, 'tiltpairs_angles%s.sqlite', suffix)
+        return self._createSet(SetOfAngles, 'tiltpairs_angles%s.sqlite', suffix)
        
     def _defineSourceRelation(self, srcObj, dstObj):
         """ Add a DATASOURCE relation between srcObj and dstObj """
