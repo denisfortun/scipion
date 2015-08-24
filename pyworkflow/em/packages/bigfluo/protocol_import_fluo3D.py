@@ -37,7 +37,7 @@ from pyworkflow.em.showj import launchSupervisedPickerGUI
 from pyworkflow.em.packages.xmipp3.convert import writeSetOfMicrographs, readSetOfCoordinates
 
 
-class ProtImportFluoMic(ProtParticlePicking, XmippProtocol):
+class ProtImportFluo3D(ProtParticlePicking, XmippProtocol):
 
     """Xmipp protocol to pick particles in a set of micrographs 
     either manually or using automatic picking support. Particles will be used in order to reconstruct a 3D molecule from it's 2D projections. """
