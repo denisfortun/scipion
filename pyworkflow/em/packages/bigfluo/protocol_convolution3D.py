@@ -24,7 +24,7 @@
 # *
 # **************************************************************************
 from pyworkflow.em.packages.bigfluo.data import Fluo3D
-from xmipp3 import getMatlabEnviron
+
 """
 This sub-package contains the ProtConvolution3D protocol
 """
@@ -63,18 +63,18 @@ class ProtConvolution3D(EMProtocol):
         psf = self.inputPSF.get()
         fnPsf = psf.getFileName()
         fnRoot = self._getExtraPath(pwutils.removeBaseExt(fnFluoVol))
+        # Get the absolute path here
+        fnProject = "/home/big/ScipionUserData/projects/Fluorescence_3D_2/"
         mirtDir = os.path.join(os.environ['XMIPP_HOME'], 'external', 'mirt')
 
-        args='''-r "diary('%s'); convolution3D('%s','%s','%s'); exit"'''%(fnRoot+"_matlab.log",fnFluoVol,fnPsf,fnRoot)
+        args='''-r "diary('%s'); bigfluo_convolution3D('%s','%s','%s'); exit"'''%(fnProject+fnRoot+"_matlab.log",fnProject+fnFluoVol,fnProject+fnPsf,fnProject+fnRoot)
         self.runJob("matlab", args, env=getMatlabEnviron(mirtDir))
-        
-        print("############################################")
-        print(args)
         
         dimx = fluoVol.getDim()[0]
         dimy = fluoVol.getDim()[1]
         dimz = fluoVol.getDim()[2]
         
+        from pyworkflow.em.xmipp3 import getMatlabEnviron
         self.runJob("xmipp_image_convert", "-i %s_convolved.raw#%d,%d,%d,0,float -o %s_convolved.vol" % (fnRoot,dimx,dimy,dimz,fnRoot))
         
         outputFluoVol = Volume(fnRoot + "_convolved.vol")
