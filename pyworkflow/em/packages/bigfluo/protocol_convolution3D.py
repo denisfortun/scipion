@@ -24,6 +24,7 @@
 # *
 # **************************************************************************
 from pyworkflow.em.packages.bigfluo.data import Fluo3D
+from xmipp3 import getMatlabEnviron
 """
 This sub-package contains the ProtConvolution3D protocol
 """
@@ -41,7 +42,7 @@ class ProtConvolution3D(EMProtocol):
         form.addSection(label='Input')
         
         form.addParam('inputFluo3D', PointerParam, label="Input volume", important=True, 
-                      pointerClass='Fluo3D',# pointerCondition='hasRepresentatives',
+                      pointerClass='Volume',# pointerCondition='hasRepresentatives',
                       help='Select the input fluorescence volume from the project.')  
         form.addParam('inputPSF', PointerParam, label="PSF", important=True,
                       pointerClass='Volume',
@@ -51,23 +52,32 @@ class ProtConvolution3D(EMProtocol):
 
     #--------------------------- INSERT steps functions --------------------------------------------  
     def _insertAllSteps(self):
-        self._insertFunctionStep('convolve')
+#         self._insertFunctionStep('convolve')
 
         self._insertFunctionStep('createOutputStep')
     
     #--------------------------- STEPS functions --------------------------------------------
-    def convolve(self):
+    def createOutputStep(self):
         fluoVol = self.inputFluo3D.get()
         fnFluoVol = fluoVol.getFileName()
         psf = self.inputPSF.get()
         fnPsf = psf.getFileName()
-        fnOut = self._getExtraPath(pwutils.removeBaseExt(fnFluoVol) + "_conv.vol")
-        
-        args='''-r "diary('%s'); convolution3D('%s','%s','%s','%s'); exit"'''%(fnRoot+"_matlab.log",fnFluoVol,fnPsf,fnOut)
-        self.runJob("matlab", args, env=getMatlabEnviron(mirtDir))
+        fnRoot = self._getExtraPath(pwutils.removeBaseExt(fnFluoVol))
+        mirtDir = os.path.join(os.environ['XMIPP_HOME'], 'external', 'mirt')
 
-    def createOutputStep(self, fnOut):
-        outFluoVol = Fluo3D(fnOut)
+        args='''-r "diary('%s'); convolution3D('%s','%s','%s'); exit"'''%(fnRoot+"_matlab.log",fnFluoVol,fnPsf,fnRoot)
+        self.runJob("matlab", args, env=getMatlabEnviron(mirtDir))
+        
+        print("############################################")
+        print(args)
+        
+        dimx = fluoVol.getDim()[0]
+        dimy = fluoVol.getDim()[1]
+        dimz = fluoVol.getDim()[2]
+        
+        self.runJob("xmipp_image_convert", "-i %s_convolved.raw#%d,%d,%d,0,float -o %s_convolved.vol" % (fnRoot,dimx,dimy,dimz,fnRoot))
+        
+        outputFluoVol = Volume(fnRoot + "_convolved.vol")
         
         self._defineOutputs(outputFluo3D=outFluoVol)
-        
+

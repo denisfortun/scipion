@@ -42,7 +42,6 @@ from protocol_import_fluo3D import ProtImportFluo3D
 from protocol_fluorescence_convolutionMatching import ProtConvMatching
 from protocol_ransac_fluo import ProtRansacFluo
 from protocol_convmatch2D import ProtConvMatch2D, ConvMatch2DViewer
-from protocol_particle_picking_manual_3D import ProtParticlePickingManual3D
 from protocol_extract_particles_3D import ProtExtractParticles3D
 from pyworkflow.em.packages.xmipp3.protocol_cltomo import XmippProtCLTomo
 from protocol_align_3D import ProtAlign3D
