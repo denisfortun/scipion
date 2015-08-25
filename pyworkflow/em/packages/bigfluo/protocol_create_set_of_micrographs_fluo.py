@@ -43,7 +43,7 @@ class ProtCreateSetMicFluo(EMProtocol):
     def _defineParams(self, form):
         form.addSection(label='Input')
         
-        form.addParam('inputSetOfFluo3D', PointerParam, pointerClass="SetOfVolumes", 
+        form.addParam('inputSetOfFluo3D', PointerParam, pointerClass="SetOfFluo3D", 
                       label="Input fluorescence volumes",
                       help="Select the volume that will be preprocessed for manual picking")
 
