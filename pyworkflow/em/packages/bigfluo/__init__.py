@@ -29,7 +29,7 @@ wrapping EPFL Fluorescence routines
 """
 from bibtex import _bibtex # Load bibtex dict with references
 
-_logo = "simple_logo.png"
+_logo = "psf_logo.png"
 
 from epfl import *
 
@@ -47,3 +47,5 @@ from protocol_extract_particles_3D import ProtExtractParticles3D
 from pyworkflow.em.packages.xmipp3.protocol_cltomo import XmippProtCLTomo
 from protocol_align_3D import ProtAlign3D
 from protocol_create_mask3d_fluo import XmippProtCreateMask3DFluo
+from protocol_create_set_of_micrographs_fluo import ProtCreateSetMicFluo
+from protocol_convolution3D import ProtConvolution3D

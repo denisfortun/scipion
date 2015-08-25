@@ -62,12 +62,13 @@ class ProtImportFluo3D(em.ProtImportImages):
         self.info("Using pattern: '%s'" % pattern)
 
         # Create a Volume template object
-        vol = Fluo3D()
+        vol = em.Volume()#Fluo3D()
         vol.setSamplingRate(self.samplingRate.get())
         copyOrLink = self.getCopyOrLink()
         imgh = em.ImageHandler()
 
-        volSet = self._createSetOfFluo3D()
+        #volSet = self._createSetOfFluo3D()
+        volSet = self._createSetOfVolumes()
         volSet.setSamplingRate(self.samplingRate.get())
 
         for fileName, fileId in self.iterFiles():

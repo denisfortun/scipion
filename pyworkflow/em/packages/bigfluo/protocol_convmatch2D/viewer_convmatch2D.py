@@ -35,7 +35,7 @@ from pyworkflow.protocol.executor import StepExecutor
 from pyworkflow.viewer import CommandView, Viewer, ProtocolViewer, DESKTOP_TKINTER, WEB_DJANGO
 from pyworkflow.em.viewer import DataView, ClassesView, Classes3DView
 from pyworkflow.utils import createUniqueFileName, cleanPattern
-from protocol_projmatch import XmippProtProjMatch
+from protocol_convmatch2D import ProtConvMatch2D
 # from projmatch_initialize import createFilenameTemplates
 from pyworkflow.em.packages.xmipp3.convert import * # change this
 from pyworkflow.em.viewer import ChimeraDataView
@@ -69,7 +69,7 @@ class ConvMatch2DViewer(ProtocolViewer):
     """ Wrapper to visualize different type of data objects
     with the Xmipp program xmipp_showj
     """
-    _targets = [XmippProtProjMatch]
+    _targets = [ProtConvMatch2D]
     _environments = [DESKTOP_TKINTER, WEB_DJANGO]
     
     _label = 'viewer projection matching'
