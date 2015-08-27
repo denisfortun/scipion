@@ -23,7 +23,7 @@
 # *  e-mail address 'jmdelarosa@cnb.csic.es'
 # *
 # **************************************************************************
-from pyworkflow.em.packages.bigfluo.data import Fluo3D
+from pyworkflow.em.packages.bigfluo.data import Fluo3D,SetOfFluo3D
 
 """
 This sub-package contains the ProtConvolution3D protocol
@@ -33,23 +33,18 @@ import pyworkflow.utils as pwutils
 from pyworkflow.em import *  
 
                 
-class ProtConvolution3D(EMProtocol):
-    """Protocol to apply 3D convolution to a Fluo3D object """
-    _label = 'Apply 3D convolution'
+class ProtAverage3D(EMProtocol):
+    """Protocol to compute the average of a set of Fluo3D """
+    _label = '3D averaging'
     
     #--------------------------- DEFINE param functions --------------------------------------------   
     def _defineParams(self, form):
         form.addSection(label='Input')
         
-        form.addParam('inputFluo3D', PointerParam, label="Input volume", important=True, 
-                      pointerClass='Volume',# pointerCondition='hasRepresentatives',
-                      help='Select the input fluorescence volume from the project.')  
-        form.addParam('inputPSF', PointerParam, label="PSF", important=True,
-                      pointerClass='Volume',
-                      help='Select the PSF ')
+        form.addParam('inputSetOfFluo3D', PointerParam, label="Input volume", important=True, 
+                      pointerClass='SetOfVolumes',# pointerCondition='hasRepresentatives',
+                      help='Select the input set of fluorescence volumes to average.')  
         
-        form.addParallelSection(threads=4, mpi=1)
-
     #--------------------------- INSERT steps functions --------------------------------------------  
     def _insertAllSteps(self):
 #         self._insertFunctionStep('convolve')
@@ -58,26 +53,24 @@ class ProtConvolution3D(EMProtocol):
     
     #--------------------------- STEPS functions --------------------------------------------
     def createOutputStep(self):
-        fluoVol = self.inputFluo3D.get()
-        fnFluoVol = fluoVol.getFileName()
-        psf = self.inputPSF.get()
-        fnPsf = psf.getFileName()
-        fnRoot = self._getExtraPath(pwutils.removeBaseExt(fnFluoVol))
-   
+        setOfFluoVols = self.inputSetOfFluo3D.get()
+        fnSetOfFluoVols_stk = list(setOfFluoVols.getFiles())[0]
+        fnRoot = self._getExtraPath(pwutils.removeBaseExt(fnSetOfFluoVols_stk))
+    
         from pyworkflow.em.packages.xmipp3 import getMatlabEnviron
-        args=''' -r "diary('%s'); bigfluo_convolution3D('%s','%s','%s'); exit"'''%(fnRoot+"_matlab.log",fnFluoVol,fnPsf,fnRoot)
+        args=''' -r "diary('%s'); bigfluo_average3D('%s','%s'); exit"'''%(fnRoot+"_matlab.log",fnSetOfFluoVols_stk,fnRoot)
         self.runJob("matlab", args, env=getMatlabEnviron())
-
-        dimx = fluoVol.getDim()[0]
-        dimy = fluoVol.getDim()[1]
-        dimz = fluoVol.getDim()[2]
-        
+ 
+        dimx = setOfFluoVols.getDim()[0]
+        dimy = setOfFluoVols.getDim()[1]
+        dimz = setOfFluoVols.getDim()[2]
+         
         fnOut = "%s_convolved.vol" % fnRoot
         ih = ImageHandler()
-        ih.convert("%s_convolved.raw#%d,%d,%d,0,float" % (fnRoot,dimx,dimy,dimz), fnOut)
-        
-        outputFluoVol = Volume()
+        ih.convert("%s_average.raw#%d,%d,%d,0,float" % (fnRoot,dimx,dimy,dimz), fnOut)
+         
+        outputFluoVol = Fluo3D()
         outputFluoVol.setFileName(fnOut)
-        
+         
         self._defineOutputs(outputFluo3D=outputFluoVol)
 

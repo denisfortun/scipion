@@ -48,3 +48,4 @@ from protocol_align_3D import ProtAlign3D
 from protocol_create_mask3d_fluo import XmippProtCreateMask3DFluo
 from protocol_create_set_of_micrographs_fluo import ProtCreateSetMicFluo
 from protocol_convolution3D import ProtConvolution3D
+from protocol_average3D import ProtAverage3D
