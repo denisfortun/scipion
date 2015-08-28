@@ -55,7 +55,7 @@ class ProtApplyClassAlign2D(EMProtocol):
     def _insertAllSteps(self):
         #if self.method == AVERAGE:
         #    self._insertFunctionStep('createSlicesAverage')
-
+        Particle
         self._insertFunctionStep('createOutputStep')
     
     #--------------------------- STEPS functions --------------------------------------------
@@ -63,7 +63,10 @@ class ProtApplyClassAlign2D(EMProtocol):
     def _updateParticle(self, origParticle, classParticle):
         origParticle.setClassId(classParticle.getClassId())
         origParticle.setTransform(classParticle.getTransform())
-        origParticle.setAlignment(classParticle.getAlignment())
+        
+    def _updateClass(self, newClass):
+        newClass.setAlignment2D()
+        
         
     def createOutputStep(self):
         # Create a temporary set of particles to be iterated
@@ -75,6 +78,7 @@ class ProtApplyClassAlign2D(EMProtocol):
         outputClasses = self._createSetOfClasses2D(self.inputSetOfParticles.get())
                 
         outputClasses.classifyItems(updateItemCallback=self._updateParticle,
+                                    updateClassCallback=self._updateClass,
                                     itemDataIterator=iter(classifiedParts))
         
         self._defineOutputs(outputClasses=outputClasses)
