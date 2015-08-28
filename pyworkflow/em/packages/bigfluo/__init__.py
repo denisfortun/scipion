@@ -41,7 +41,6 @@ _environ = getEnviron()
 from protocol_import_fluo3D import ProtImportFluo3D
 from protocol_fluorescence_convolutionMatching import ProtConvMatching
 from protocol_ransac_fluo import ProtRansacFluo
-from protocol_convmatch2D import ProtConvMatch2D, ConvMatch2DViewer
 from protocol_extract_particles_3D import ProtExtractParticles3D
 from pyworkflow.em.packages.xmipp3.protocol_cltomo import XmippProtCLTomo
 from protocol_align_3D import ProtAlign3D
@@ -49,3 +48,5 @@ from protocol_create_mask3d_fluo import XmippProtCreateMask3DFluo
 from protocol_create_set_of_micrographs_fluo import ProtCreateSetMicFluo
 from protocol_convolution3D import ProtConvolution3D
 from protocol_average3D import ProtAverage3D
+from protocol_simu_fluo_particles3D import ProtSimuFluoParticles3D
+from protocol_apply_classif_align import ProtApplyClassAlign2D

@@ -773,12 +773,14 @@ def readSetOfImages(filename, imgSet, rowToFunc, **kwargs):
         else:
             kwargs['alignType'] = ALIGN_NONE
     
+    img = None
     for objId in imgMd:
         imgRow = rowFromMd(imgMd, objId)
         img = rowToFunc(imgRow, **kwargs)
         imgSet.append(img)
         
-    imgSet.setHasCTF(img.hasCTF())
+    if img is not None:
+        imgSet.setHasCTF(img.hasCTF())
     imgSet.setAlignment(kwargs['alignType'])
         
 
