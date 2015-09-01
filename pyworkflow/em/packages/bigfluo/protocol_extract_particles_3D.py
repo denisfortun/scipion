@@ -246,9 +246,9 @@ class ProtExtractParticles3D(ProtExtractParticles, ProtInitialVolume, XmippProto
             particleSize = md.MetaDataInfo(stack)[0]
             bgRadius = int(particleSize/2)
         
-        if normType=="OldXmipp":
+        if normType==0:
             args += "--method OldXmipp"
-        elif normType=="NewXmipp":
+        elif normType==1:
             args += "--method NewXmipp --background circle %(bgRadius)d"
         else:
             args += "--method Ramp --background circle %(bgRadius)d"

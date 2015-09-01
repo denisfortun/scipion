@@ -51,7 +51,9 @@ class XmippProtCLTomo(ProtClassify3D):
                       help="If set to true, it will be created a new set of volumes with all of them aligned")
         form.addParam('align',BooleanParam,default=True,label="Align",
                       help="Do not align if volumes are already aligned, only classify")
-        
+        form.addParam('extraParams',StringParam,default='',label='Extra parameters',
+                      help="You may give here any parameter accepted bbbbbbbby CLTomo")
+                
         form.addSection(label='Initial references')
         form.addParam('doGenerateInitial',BooleanParam,default=True,label='Generate initial volume',
                       help="Let CLTomo to automatically generate the initial references")
@@ -122,6 +124,8 @@ class XmippProtCLTomo(ProtClassify3D):
             params+=" --generateAlignedVolumes"
         if not self.align:
             params+=" --dontAlign"
+        if self.extraParams!="":
+            params+=" "+str(self.extraParams)
 
         self.runJob('xmipp_mpi_classify_CLTomo','%d %s'%(self.numberOfMpi.get(),params),env=self.getCLTomoEnviron(),numberOfMpi=1)
     
