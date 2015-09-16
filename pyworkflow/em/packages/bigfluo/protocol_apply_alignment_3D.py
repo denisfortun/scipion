@@ -92,7 +92,7 @@ class ProtApplyAlignment3D(ProtAlign3D):
 
             
     def createOutputStep(self):
-        particles = self.inputVolumes.get()
+        volumes = self.inputVolumes.get()
 
         # Generate the SetOfAlignmet
         alignedSet = self._createSetOfVolumes()
