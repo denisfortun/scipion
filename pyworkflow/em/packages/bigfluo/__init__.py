@@ -53,3 +53,5 @@ from protocol_apply_classif_align import ProtApplyClassAlign2D
 from protocol_apply_classif_align_3D import ProtApplyClassAlign3D
 from protocol_apply_alignment_3D import ProtApplyAlignment3D
 from protocol_apply_pose_2D import ProtApplyPose2D
+from protocol_convolution_matching import ProtConvMatch
+from protocol_reconstruct_admm import ProtReconstructADMM

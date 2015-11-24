@@ -81,6 +81,7 @@
 # #                                     itemDataIterator=iter(classifiedParts))
 #         
 #         self._defineOutputs(outputParticles=classifiedParts)
+from pyworkflow.em.packages.xmipp3.convert import alignmentToRow, imageToRow
 
 # **************************************************************************
 # *
@@ -143,7 +144,8 @@ This sub-package contains protocols for applying classification and alignement p
 import pyworkflow.utils as pwutils
 from pyworkflow.em import *  
 from pyworkflow.em.protocol import SetOfParticles
-
+from pyworkflow.em.packages.xmipp3.xmipp3 import *
+from pyworkflow.em.packages.xmipp3 import writeSetOfParticles, readSetOfParticles
 
 class ProtApplyPose2D(EMProtocol):
     """ Apply classification and alignement parameters to a set of 3D particles.
@@ -164,45 +166,61 @@ class ProtApplyPose2D(EMProtocol):
 
     #--------------------------- INSERT steps functions --------------------------------------------
     def _insertAllSteps(self):
-        #if self.method == AVERAGE:
-        #    self._insertFunctionStep('createSlicesAverage')
-        Particle
+        self._insertFunctionStep('convertInputStep')
         self._insertFunctionStep('createOutputStep')
     
     #--------------------------- STEPS functions --------------------------------------------
 
-    def _updateParticle(self, origParticle, classParticle):
-        origParticle.setTransform(classParticle.getTransform())
-
-    def _updateItem(self, item, row):
-        """ Implement this function to do some
-        update actions over each single item
-        that will be stored in the output Set.
+    def convertInputStep(self):
+        """ Generated the input particles metadata expected 
+        by projection matching. And copy the generated file to be
+        used as initial docfile for further iterations.
         """
-        item.setTransform(row.getTransform())
-        
+        writeSetOfParticles(self.InputSetOfParticles.get(), self._getExtraPath('inputParticules.xmd'))
+
+    def _updateItem(self, newPart, origPart):
+        newPart.setTransform(origPart.getTransform())
+         
     def _applyMetadata(self,inputSetOfParticles, otherSet, outputSetOfParticles):
-        
+        itemDataIterator=iter(otherSet)
+         
         for item in inputSetOfParticles:
             newItem = item.clone()
             row = None if itemDataIterator is None else next(itemDataIterator)
             self._updateItem(newItem, row)
             outputSetOfParticles.append(newItem)
-            
-                
 
     def createOutputStep(self):
-        # Create a temporary set of particles to be iterated
-        # sorted by id and in the same order of input particles
-        # since by default they grouped by classes
         partsPose = self.SetOfParticlesWithPoses.get()
         inputParts = self.InputSetOfParticles.get()
         outputParts = self._createSetOfParticles()
         
-#         outputParts = self._createSetOfParticles()
-#         partsPose.appendFromImages(self.InputSetOfParticles.get())
-
         self._applyMetadata(inputParts, partsPose, outputParts)
+        writeSetOfParticles(outputParts, self._getPath('outputParticles.xmd'))
         
+        # Write pose parameters in row form
+#         fnOutputParts = self._getPath('outputParticulesRow.xmd')
+#         MD = MetaData(self._getExtraPath('inputParticules.xmd'))
+#         row = XmippMdRow()
+#         for part in partsPose:
+#             # Assumption: corresponding particles in the two sets have the same id
+#             id = part.getObjId()
+#     
+#             alignmentToRow(part.getTransform(), row, ALIGN_3D)
+#             rot =  row.getValue(xmipp.MDL_ANGLE_ROT,id)
+#             tilt = row.getValue(xmipp.MDL_ANGLE_TILT,id)
+#             psi = row.getValue(xmipp.MDL_ANGLE_PSI,id)
+#             x = row.getValue(xmipp.MDL_SHIFT_X,id)
+#             y = row.getValue(xmipp.MDL_SHIFT_Y,id)
+#              
+#             MD.setValue(xmipp.MDL_ANGLE_ROT, rot, id)
+#             MD.setValue(xmipp.MDL_ANGLE_TILT, tilt, id)
+#             MD.setValue(xmipp.MDL_ANGLE_PSI, psi, id)
+#             MD.setValue(xmipp.MDL_SHIFT_X, x,id)
+#             MD.setValue(xmipp.MDL_SHIFT_Y, y,id)
+#         MD.write(fnOutputParts)
+#          
+#         outputParts = self._createSetOfParticles()
+#         readSetOfParticles(fnOutputParts, outputParts)
         self._defineOutputs(outputParticles=outputParts)
 
